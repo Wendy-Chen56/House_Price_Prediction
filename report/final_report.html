@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Prediction - Final Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 24px;
+            color: #222;
+            line-height: 1.7;
+        }
+        h1, h2, h3 {
+            color: #243746;
+        }
+        h1 {
+            text-align: center;
+        }
+        h2 {
+            margin-top: 36px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+        }
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #f2f4f6;
+        }
+        @media print {
+            body {
+                max-width: none;
+                margin: 0;
+            }
+            img, table {
+                break-inside: avoid;
+            }
+            h2, h3 {
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+<h1 id="house-price-prediction-using-machine-learning">House Price Prediction Using Machine Learning</h1>
+<p><strong>Course:</strong> MSBA 265<br />
+<strong>Project:</strong> Final Project<br />
+<strong>Dataset:</strong> House Prices – Advanced Regression Techniques (Kaggle)</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li>Executive Summary - 1</li>
+<li>Business Problem and Stakeholders - 2</li>
+<li>Dataset Description and Data Sources - 3</li>
+<li>Exploratory Data Analysis (EDA) - 5</li>
+<li>Data Preparation and Feature Selectio - 9</li>
+<li>Modeling Approach - 11</li>
+<li>Model Evaluation and Results - 13</li>
+<li>Business Value and Recommendations - 19</li>
+<li>Limitations and Future Improvements - 20</li>
+<li>Conclusion - 22</li>
+<li>References - 22</li>
+<li>Appendix - 23</li>
+</ol>
+<hr />
+<h2 id="1-executive-summary">1. Executive Summary</h2>
+<p>When people want to sell a house, one of the hardest things is deciding how much to ask for it. There are many things to consider, like the size of the house, its condition, and where it is located. For this project, I wanted to see if I could use machine learning to predict house prices based on this information.</p>
+<p>I used the House Prices dataset from Kaggle. It has information about 1,460 houses in Ames, Iowa. I first looked through the data to understand what was included and which features seemed to have a stronger relationship with house prices.</p>
+<p>Next, I tried different models, including Linear Regression, Ridge Regression, Huber Regression, and Random Forest. After comparing their results, I found that Random Forest worked best for my project. I used 12 house features to build my final model.</p>
+<p>I used 1,168 houses for training and 292 houses for testing. My final model had an RMSE of $29,971, an MAE of $18,112, and an R² of 0.8829. This means the model did a fairly good job of predicting house prices, but it still made some big mistakes on certain houses.</p>
+<p>I think this project could be useful for people who are planning to sell a house or for real estate agents who need to suggest a listing price. They could use the predicted price as a starting point and compare it with other houses in the area. However, I would not rely on the model alone to decide the final price.</p>
+<p>One thing to keep in mind is that the dataset only includes older house sales from Ames, Iowa. Because of that, I cannot say the model would work just as well in other cities or in today's housing market.</p>
+<h2 id="2-business-problem-and-stakeholders">2. Business Problem and Stakeholders</h2>
+<h3 id="business-problem">Business Problem</h3>
+<p>When someone wants to sell a house, they need to decide on a listing price. If the price is too high, it might take longer to find a buyer. If the price is too low, the seller might miss out on money.</p>
+<p>The problem is that houses are different. Even houses in the same neighborhood can have different prices because of their size, age, quality, and other features.</p>
+<p>For my project, I wanted to find out if I could use house information to predict a reasonable sale price.</p>
+<p><strong>My business question is: Can machine learning help estimate house prices and give sellers a better starting point when deciding on a listing price?</strong></p>
+<h3 id="stakeholders">Stakeholders</h3>
+<p>The main people who could use my project are home sellers and real estate agents.</p>
+<p>Home sellers could use the prediction to get an idea of what their house might sell for.</p>
+<p>Real estate agents could use it as another reference when talking with clients about pricing. They would still need to look at recent sales and the local housing market.</p>
+<h3 id="business-value">Business Value</h3>
+<p>I think the biggest value of this project is helping people make a more informed pricing decision.</p>
+<p>Instead of guessing a price based only on personal opinions, sellers and agents could compare the model's prediction with other information.</p>
+<p>For example, if a seller wants to list a house for $300,000 but the model predicts $260,000, that difference could be a reason to look more closely at similar homes before choosing the asking price.</p>
+<p>However, my project does not measure how much money sellers would actually save or earn by using the model. That would require testing it with real pricing decisions and newer housing data.</p>
+<h3 id="how-i-would-measure-success">How I Would Measure Success</h3>
+<p>I used RMSE, MAE, and R² to measure how well the model predicted sale prices.</p>
+<p>My main goal was to reduce prediction errors when compared with simpler regression models.</p>
+<p>For a future business application, I would also want to know whether the predictions help agents set better listing prices and whether the model works well with more recent housing data.</p>
+<h2 id="3-dataset-description-and-data-sources">3. Dataset Description and Data Sources</h2>
+<h3 id="data-source">Data Source</h3>
+<p>For this project, I used the House Prices – Advanced Regression Techniques dataset from Kaggle (Kaggle, n.d.). The dataset contains housing information from Ames, Iowa. The Ames Housing dataset was also discussed by De Cock (2011).</p>
+<p>Dataset link: https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data</p>
+<p>The dataset contains information about houses in Ames, Iowa. It includes details such as house size, neighborhood, overall quality, construction year, garage space, and sale price.</p>
+<p>I used <code>train.csv</code> for my analysis because it includes the actual sale prices. The file has 1,460 houses and 81 columns, including the sale price.</p>
+<p>Kaggle provides <code>test.csv</code>, which does not include actual sale prices. I used this file to check whether my saved model could make predictions on new records.</p>
+<h3 id="data-quality">Data Quality</h3>
+<p>Before building my models, I checked the dataset for missing values, duplicate records, and data types.</p>
+<p>I did not find any duplicate rows, and there were no missing values in <code>SalePrice</code>, which is the variable I wanted to predict.</p>
+<p>However, some other columns had missing values. For example, not every house had the same garage or basement information. I needed to handle missing values before training the model.</p>
+<p>I noticed that a few houses had unusual combinations of size and sale price. These records were important to check because they could affect the model's predictions.</p>
+<h3 id="features-used">Features Used</h3>
+<p>I did not use all the columns in my final model. Instead, I selected 12 features that describe different parts of a house.</p>
+<p>The seven numerical features were OverallQual, GrLivArea, GarageCars, TotalBsmtSF, FullBath, YearBuilt, and YearRemodAdd.</p>
+<p>The five categorical features were Neighborhood, KitchenQual, SaleCondition, HouseStyle, and ExterQual.</p>
+<p>I used One-Hot Encoding for the categorical features so the Random Forest model could use them.</p>
+<h3 id="data-limitations">Data Limitations</h3>
+<p>One limitation is that the dataset contains historical sales from Ames, Iowa. House prices can change over time, and the housing market in another city might be very different.</p>
+<p>Because of this, I would need newer local data before using the model to support real pricing decisions in another market.</p>
+<h2 id="4-exploratory-data-analysis-eda">4. Exploratory Data Analysis (EDA)</h2>
+<p>Before building my models, I spent some time exploring the dataset. I wanted to understand what the house prices looked like, which features were related to price, and whether there were any unusual records.</p>
+<h3 id="house-price-distribution">House Price Distribution</h3>
+<p><img alt="Figure 1. Distribution of House Sale Prices" src="../figures/saleprice_distribution.png" /></p>
+<p><em>Figure 1. Distribution of House Sale Prices. Source: Kaggle House Prices dataset; chart created using Python.</em></p>
+<p>The average sale price was about $180,921, while the median was $163,000. The lowest sale price was $34,900, and the highest was $755,000.</p>
+<p>I noticed that most houses were in the lower and middle price ranges, but a smaller number of expensive houses made the distribution skewed to the right.</p>
+<p>Because of this, I also tried using the log of SalePrice when training my models. This helped me work with a less skewed target variable.</p>
+<h3 id="features-related-to-house-prices">Features Related to House Prices</h3>
+<p><img alt="Figure 2. Overall Quality vs. House Sale Price" src="../figures/quality_vs_saleprice.png" /></p>
+<p><em>Figure 2. Overall Quality vs. House Sale Price. Source: Kaggle House Prices dataset; chart created using Python.</em></p>
+<p><img alt="Figure 3. Living Area vs. House Sale Price" src="../figures/living_area_vs_saleprice.png" /></p>
+<p><em>Figure 3. Living Area vs. House Sale Price. Source: Kaggle House Prices dataset; chart created using Python.</em></p>
+<p><img alt="Figure 4. Correlation Between House Features and Sale Price" src="../figures/feature_correlation_heatmap.png" /></p>
+<p><em>Figure 4. Correlation Between House Features and Sale Price. Source: Kaggle House Prices dataset; chart created using Python.</em></p>
+<p>I checked the correlations between numerical features and SalePrice.</p>
+<p>OverallQual had the strongest correlation with SalePrice at 0.791. GrLivArea, which measures above-ground living space, had a correlation of 0.709.</p>
+<p>GarageCars and TotalBsmtSF also showed fairly strong relationships with sale price, with correlations of 0.640 and 0.614.</p>
+<p>From this, I could see that house quality, living space, and some garage and basement features were useful starting points for my models.</p>
+<p>However, correlation does not mean that a feature directly causes the price to increase or decrease.</p>
+<h3 id="unusual-houses">Unusual Houses</h3>
+<p>I found a few houses that looked unusual.</p>
+<p>For example, House ID 1299 had 5,642 square feet of above-ground living space and an OverallQual score of 10, but its recorded sale price was only $160,000.</p>
+<p>This was unusual compared with other large, high-quality houses in the dataset.</p>
+<p>When I checked this house during cross-validation, it caused a very large prediction error for one of my linear models.</p>
+<p>I kept the record in my analysis instead of deleting it just to improve the model results. It helped me understand why I needed to compare different models and pay attention to unusual observations.</p>
+<h3 id="what-i-learned-from-eda">What I Learned from EDA</h3>
+<p>After exploring the data, I decided to focus on a smaller group of house features instead of using every column.</p>
+<p>I learned that looking at average model performance is not enough. Some houses can be much harder to predict than others, so I needed to check individual prediction errors as well.</p>
+<h2 id="5-data-preparation-and-feature-selection">5. Data Preparation and Feature Selection</h2>
+<h3 id="preparing-the-data">Preparing the Data</h3>
+<p>After exploring the dataset, I started preparing the data for modeling.</p>
+<p>I used <code>SalePrice</code> as the target variable because my goal was to predict how much a house would sell for.</p>
+<p>I first separated the dataset into training and testing groups. I used 80% of the data for training and kept the other 20% for testing. This gave me 1,168 training records and 292 testing records.</p>
+<p>I used a random seed of 42 so I could get the same split when running the code again.</p>
+<h3 id="choosing-the-features">Choosing the Features</h3>
+<p>I decided to use 12 house features for my final Random Forest model.</p>
+<p>Seven of them were numerical features: OverallQual, GrLivArea, GarageCars, TotalBsmtSF, FullBath, YearBuilt, and YearRemodAdd.</p>
+<p>The other five were categorical features: Neighborhood, KitchenQual, SaleCondition, HouseStyle, and ExterQual.</p>
+<p>I chose these features because they describe different parts of a house, including its size, quality, location, age, and condition.</p>
+<h3 id="handling-missing-values-and-categorical-data">Handling Missing Values and Categorical Data</h3>
+<p>Some of the selected features had missing values, so I used a preprocessing pipeline to handle them.</p>
+<p>For the numerical features, I used median imputation. For the categorical features, I used the most common value when information was missing.</p>
+<p>I used One-Hot Encoding to turn categorical information into numerical columns that the model could work with.</p>
+<p>I used a scikit-learn Pipeline so the preprocessing steps and model could work together.</p>
+<h3 id="avoiding-data-leakage">Avoiding Data Leakage</h3>
+<p>One thing I needed to be careful about was data leakage. I did not want information from the testing data to affect how the model was trained.</p>
+<p>To avoid this, I fitted the preprocessing steps using training data rather than the full dataset.</p>
+<p>I used 5-fold cross-validation on the training data to compare models before evaluating the saved model on the separate test set.</p>
+<h3 id="target-transformation">Target Transformation</h3>
+<p>House prices were not evenly distributed, so I trained my later models using <code>log1p(SalePrice)</code>.</p>
+<p>After making predictions, I used <code>expm1()</code> to convert the results back into dollar amounts.</p>
+<p>This allowed me to compare prediction errors in dollars, which is easier to understand when discussing house prices.</p>
+<h3 id="final-prepared-data">Final Prepared Data</h3>
+<p>My final model used 12 original house features. After One-Hot Encoding, these were expanded into 54 numerical input columns based on the training data.</p>
+<p>I saved the preprocessing steps and Random Forest model together so I could reload them without rebuilding the preprocessing manually.</p>
+<h2 id="6-modeling-approach">6. Modeling Approach</h2>
+<h3 id="models-i-tested">Models I Tested</h3>
+<p>For this project, I did not want to choose a model without comparing it with other options. I started with simpler regression models and then tried Random Forest to see if it could make better predictions. I used Python and scikit-learn to train and compare the models (Pedregosa et al., 2011).</p>
+<p>I tested four types of models:</p>
+<ul>
+<li><strong>Linear Regression:</strong> I started with this model because it was a simple way to see how house features were related to sale prices.</li>
+<li><strong>Ridge Regression:</strong> I wanted to see if adding regularization could help the model handle relationships between the features.</li>
+<li><strong>Huber Regression:</strong> I tried this model because I noticed some unusual houses in the dataset, and I wanted to see if it handled large errors better.</li>
+<li><strong>Random Forest:</strong> I wanted to test a model that could learn more complicated relationships between house features and prices.</li>
+</ul>
+<h3 id="how-i-compared-the-models">How I Compared the Models</h3>
+<p>I used 5-fold cross-validation on my training data.</p>
+<p>This means I divided the training data into five groups. Each time, I trained the model using four groups and evaluated it using the remaining group. I repeated this process until every group had been used for validation.</p>
+<p>I compared the results using three metrics:</p>
+<ul>
+<li><strong>RMSE:</strong> Shows how large prediction errors are, with more weight given to bigger mistakes.</li>
+<li><strong>MAE:</strong> Shows the average absolute difference between predicted and actual house prices.</li>
+<li><strong>R²:</strong> Shows how much of the variation in house prices the model explains.</li>
+</ul>
+<p>I converted the predictions back into dollars before calculating the performance metrics so the results would be easier to understand.</p>
+<h3 id="improving-the-random-forest-model">Improving the Random Forest Model</h3>
+<p>At first, I tested Random Forest using seven numerical features.</p>
+<p>Later, I added five categorical features, including Neighborhood and KitchenQual, to see if the model could make better predictions with more information.</p>
+<p>The Random Forest model with 12 features had the lowest average RMSE in my cross-validation comparison.</p>
+<p>Its average RMSE was $33,381.19, compared with $33,783.10 for Random Forest using only seven features.</p>
+<p>The improvement was not very large, but the 12-feature model performed slightly better, so I chose it for my final model.</p>
+<h3 id="final-model">Final Model</h3>
+<p>My final model was a Random Forest Regressor with 200 trees, a maximum depth of 12, and a minimum leaf size of 2.</p>
+<p>I used <code>random_state=42</code> to make the results reproducible.</p>
+<p>I saved the preprocessing steps and the trained model together in a joblib file.</p>
+<p>After saving it, I reloaded the model and checked that it could make predictions without retraining.</p>
+<p>I cloned my GitHub project into a separate folder and tested it in a new Python environment. The saved model produced the same predictions and evaluation results.</p>
+<h2 id="7-model-evaluation-and-results">7. Model Evaluation and Results</h2>
+<h3 id="model-comparison">Model Comparison</h3>
+<p><img alt="Figure 5. Model Comparison Using 5-Fold Cross-Validation RMSE" src="../figures/model_comparison_rmse.png" /></p>
+<p><em>Figure 5. Model Comparison Using 5-Fold Cross-Validation RMSE. Source: Kaggle House Prices dataset; chart created using Python.</em></p>
+<p>After training the models, I compared their performance using 5-fold cross-validation. I wanted to see which model made smaller prediction errors and whether the results were consistent across different groups of houses.</p>
+<p>Here are my results:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Features</th>
+<th style="text-align: right;">Average RMSE</th>
+<th style="text-align: right;">Average MAE</th>
+<th style="text-align: right;">Average R²</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linear Regression</td>
+<td>7 numerical</td>
+<td style="text-align: right;">$54,031.99</td>
+<td style="text-align: right;">$22,258.18</td>
+<td style="text-align: right;">0.3201</td>
+</tr>
+<tr>
+<td>Huber Regression</td>
+<td>7 numerical</td>
+<td style="text-align: right;">$59,908.65</td>
+<td style="text-align: right;">$21,863.14</td>
+<td style="text-align: right;">0.0605</td>
+</tr>
+<tr>
+<td>Ridge Regression</td>
+<td>7 numerical</td>
+<td style="text-align: right;">$53,429.25</td>
+<td style="text-align: right;">$22,211.07</td>
+<td style="text-align: right;">0.3439</td>
+</tr>
+<tr>
+<td>Random Forest</td>
+<td>7 numerical</td>
+<td style="text-align: right;">$33,783.10</td>
+<td style="text-align: right;">$20,911.80</td>
+<td style="text-align: right;">0.8055</td>
+</tr>
+<tr>
+<td>Random Forest</td>
+<td>12 features</td>
+<td style="text-align: right;">$33,381.19</td>
+<td style="text-align: right;">$20,196.80</td>
+<td style="text-align: right;">0.8103</td>
+</tr>
+</tbody>
+</table>
+<p>Random Forest performed better than the other models in my comparison. The version with 12 features had the lowest average RMSE and MAE.</p>
+<p>I also noticed that the simpler regression models had much larger differences between their cross-validation results. Some unusual houses caused very large prediction errors.</p>
+<p>The 12-feature Random Forest had an average RMSE of $33,381.19, with a standard deviation of $4,759.61 across the five folds. This was more consistent than the regression models I tested.</p>
+<h3 id="final-test-results">Final Test Results</h3>
+<p><img alt="Figure 6. Actual vs. Predicted House Prices" src="../figures/actual_vs_predicted.png" /></p>
+<p><em>Figure 6. Actual vs. Predicted House Prices. Source: Kaggle House Prices dataset; chart created using Python.</em></p>
+<p>After comparing the models, I trained my final Random Forest model on 1,168 houses and evaluated it using the 292-house test set.</p>
+<p>The results were:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: right;">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RMSE</td>
+<td style="text-align: right;">$29,971.00</td>
+</tr>
+<tr>
+<td>MAE</td>
+<td style="text-align: right;">$18,112.09</td>
+</tr>
+<tr>
+<td>R²</td>
+<td style="text-align: right;">0.8829</td>
+</tr>
+</tbody>
+</table>
+<p>The MAE of about $18,112 means the model's predictions were off by around $18,112 on average in absolute dollar terms.</p>
+<p>The R² of 0.8829 means the model explained about 88.3% of the variation in sale prices in this test set.</p>
+<p>I was happy with these results, but the model was not accurate for every house. Some houses still had large prediction errors.</p>
+<h3 id="looking-at-individual-predictions">Looking at Individual Predictions</h3>
+<p><img alt="Figure 7. Distribution of House Price Prediction Errors" src="../figures/prediction_error_distribution.png" /></p>
+<p><em>Figure 7. Distribution of House Price Prediction Errors. Source: Kaggle House Prices dataset; chart created using Python.</em></p>
+<p>I checked the actual and predicted prices for individual houses.</p>
+<p>For example, House ID 893 had an actual sale price of $154,500, and the model predicted $143,142.40. The difference was $11,357.60.</p>
+<p>However, House ID 219 had an actual sale price of $311,500, but the model predicted $206,143.70. That was an error of more than $105,000.</p>
+<p>This showed me that even when the overall model results look good, some individual predictions can still be far from the actual price.</p>
+<h3 id="checking-unusual-records">Checking Unusual Records</h3>
+<p>During my earlier analysis, I found that House ID 1299 had an unusual combination of a large living area, high quality rating, and relatively low sale price.</p>
+<p>It caused a very large error in one cross-validation fold when I used a linear model.</p>
+<p>I checked what happened when I excluded that house from the fold's evaluation. The RMSE dropped from $129,040.84 to $23,535.10.</p>
+<p>I used this as a sensitivity check, not as a reason to remove the house from the final dataset. It helped me understand how much one unusual record could affect the results.</p>
+<h3 id="reproducibility-check">Reproducibility Check</h3>
+<p>I saved my final model and preprocessing pipeline in a joblib file.</p>
+<p>I then cloned my GitHub repository into a new folder, created a new Python environment, and installed the packages using <code>requirements.txt</code>.</p>
+<p>After reloading the saved model, I ran the evaluation script again and got the same results: RMSE $29,971.00, MAE $18,112.09, and R² 0.8829.</p>
+<p>This confirmed that I could reproduce the saved model's results using the project files.</p>
+<p>One limitation is that I had already looked at the test-set performance during development, so I would want a completely new dataset for another independent check before using the model in a real business setting.</p>
+<h3 id="random-forest-feature-importance">Random Forest Feature Importance</h3>
+<p><img alt="Figure 8. Random Forest Feature Importance" src="../figures/random_forest_feature_importance.png" /></p>
+<p><em>Figure 8. Random Forest Feature Importance. Source: Kaggle House Prices dataset; chart created using Python.</em></p>
+<p>I checked which features were most important in my final Random Forest model.</p>
+<p>OverallQual had the highest importance, followed by GrLivArea and TotalBsmtSF. This tells me that the model relied heavily on house quality, living space, and basement size when making predictions.</p>
+<p>I noticed that some neighborhood and other categorical features appeared in the results after One-Hot Encoding.</p>
+<p>However, feature importance does not mean that these features directly cause house prices to change.</p>
+<h2 id="8-business-value-and-recommendations">8. Business Value and Recommendations</h2>
+<h3 id="how-this-model-could-be-used">How This Model Could Be Used</h3>
+<p>For me, the main purpose of this project is not just to predict a number. I wanted to see how the prediction could help someone make a decision.</p>
+<p>For example, a real estate agent could enter information about a house, such as its size, quality, neighborhood, and age. The model could then give an estimated sale price.</p>
+<p>The agent could compare that estimate with recent sales of similar houses before discussing a listing price with the seller.</p>
+<p>I think this would be more useful than treating the prediction as the final answer.</p>
+<h3 id="business-value_1">Business Value</h3>
+<p>The biggest potential value is giving sellers and real estate agents another way to check their pricing decisions.</p>
+<p>For example, suppose a seller wants to list a house for $300,000, but the model predicts $260,000. The agent could use that difference as a reason to review similar properties and explain why the asking price might need another look.</p>
+<p>The model could also help agents make an initial price estimate before doing a more detailed market review.</p>
+<p>However, I have not tested whether using this model actually helps houses sell faster or increases the money sellers receive. Those would be important questions to test before using it in a real business.</p>
+<h3 id="my-recommendations">My Recommendations</h3>
+<p>Based on my results, I would recommend using the model as a starting point rather than relying on it to set a final listing price.</p>
+<p>I would also recommend checking recent local sales, the condition of the property, and anything unusual about the house.</p>
+<p>If the model's prediction is very different from the seller's expected price, I would take that as a reason to investigate further instead of assuming the model is correct.</p>
+<h3 id="how-i-would-check-its-business-value">How I Would Check Its Business Value</h3>
+<p>If I had the opportunity to test this project with a real estate agency, I would compare pricing decisions made with and without the model.</p>
+<p>I would want to look at things like the difference between listing price and final sale price, how long the house stayed on the market, and whether agents found the predictions useful.</p>
+<p>This would help me understand whether the model actually improves pricing decisions, instead of only showing good prediction scores.</p>
+<h3 id="fastapi-prediction-application">FastAPI Prediction Application</h3>
+<p>A FastAPI application was added to demonstrate how the saved Random Forest model can be used to predict house prices.</p>
+<p>The API accepts 12 house features and returns a predicted sale price in US dollars.</p>
+<p>For example, a sample house with 1,800 square feet, an overall quality rating of 7, and a two-car garage received a predicted price of $220,642.90.</p>
+<p>The API prediction was compared with a prediction made directly in Python. Both returned the same result.</p>
+<p>Three automated tests also passed, covering the health check, house price prediction, and invalid input handling.</p>
+<p>The application demonstrates a possible way to use the model. It has not been tested with real estate agents or evaluated using new real-world sales data.</p>
+<h2 id="9-limitations-and-future-improvements">9. Limitations and Future Improvements</h2>
+<h3 id="limitations">Limitations</h3>
+<p>Even though my Random Forest model performed well on the test data, there are still some limitations.</p>
+<p>The first limitation is the dataset. I used historical housing data from Ames, Iowa. Since house prices change over time and different cities have different housing markets, I cannot assume my model would work equally well in California or other areas.</p>
+<p>Another limitation is that the model does not predict every house accurately. For example, I found some houses with unusual prices compared with their size and quality. These houses were harder for the models to predict.</p>
+<p>I only used 12 features in my final model. There are other things that could affect house prices, such as recent market changes, renovations, and nearby property sales. My model does not include all of that information.</p>
+<p>One more limitation is that I had already checked the test results during model development. Because of this, I would want to test the model on a completely new dataset before saying it is ready for real-world use.</p>
+<p>Finally, I have not tested the model with real sellers or real estate agents. I know how well it predicts prices on this dataset, but I do not know yet whether it would improve actual pricing decisions.</p>
+<h3 id="future-improvements">Future Improvements</h3>
+<p>If I continue working on this project, the first thing I would do is find more recent housing data. I would also like to test the model using homes from a different city to see how well it performs outside Ames.</p>
+<p>I would also try adding more useful features, such as recent sales of similar houses and local market conditions.</p>
+<p>Another improvement would be to look more closely at houses with large prediction errors. I want to understand what makes those houses different and whether I can improve the predictions without simply removing difficult records.</p>
+<p>I would also like to build a simple tool where someone could enter house information and receive a predicted price. This could make the project easier for someone without programming experience to use.</p>
+<p>Lastly, I would want to test the model with real estate agents and compare their pricing decisions with and without the model. That would help me understand whether the project has real business value.</p>
+<h2 id="10-conclusion">10. Conclusion</h2>
+<p>For this project, I wanted to see if machine learning could help predict house prices using information about the property.</p>
+<p>I started by exploring the Kaggle housing dataset and looking at how different house features were related to sale prices. After that, I prepared the data and compared several models, including Linear Regression, Ridge Regression, Huber Regression, and Random Forest.</p>
+<p>Based on my cross-validation results, Random Forest with 12 features worked best for my project. On the 292-house test set, the final model had an RMSE of $29,971, an MAE of $18,112, and an R² of 0.8829.</p>
+<p>One thing I learned was that getting a good overall score does not mean every prediction will be accurate. Some unusual houses had much larger errors, so I think it is important to look at individual predictions instead of only focusing on the average results.</p>
+<p>I learned how important it is to organize a machine learning project properly. I saved my model, tested it in a new Python environment, and was able to reproduce the same results.</p>
+<p>I think the model could be useful as an additional reference for home sellers and real estate agents when discussing house prices. However, I would not use it by itself to decide a listing price, especially because the data comes from historical sales in Ames, Iowa.</p>
+<p>Overall, this project helped me understand the full process of building a machine learning model, from preparing the data to evaluating the results and thinking about how the predictions could be used in a business setting.</p>
+<h2 id="references">References</h2>
+<p>De Cock, D. (2011). Ames, Iowa: Alternative to the Boston housing data as an end of semester regression project. <em>Journal of Statistics Education, 19</em>(3). https://doi.org/10.1080/10691898.2011.11889627</p>
+<p>Kaggle. (n.d.). <em>House prices – Advanced regression techniques</em> [Data set]. https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data</p>
+<p>Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., Vanderplas, J., Passos, A., Cournapeau, D., Brucher, M., Perrot, M., &amp; Duchesnay, É. (2011). Scikit-learn: Machine learning in Python. <em>Journal of Machine Learning Research, 12</em>, 2825–2830. https://jmlr.org/papers/v12/pedregosa11a.html</p>
+<h2 id="appendix">Appendix</h2>
+<h3 id="appendix-a-github-repository">Appendix A. GitHub Repository</h3>
+<p>I saved my project files on GitHub, including the Python scripts, dataset information, model files, and results.</p>
+<p>GitHub repository: https://github.com/Wendy-Chen56/house_prices_final_project</p>
+<p>The repository is currently private, so anyone reviewing the project will need access.</p>
+<h3 id="appendix-b-final-model-settings">Appendix B. Final Model Settings</h3>
+<p>My final model uses Random Forest Regression with the following settings:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>Random Forest Regressor</td>
+</tr>
+<tr>
+<td>Number of trees</td>
+<td>200</td>
+</tr>
+<tr>
+<td>Maximum depth</td>
+<td>12</td>
+</tr>
+<tr>
+<td>Minimum samples per leaf</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Random state</td>
+<td>42</td>
+</tr>
+<tr>
+<td>Original input features</td>
+<td>12</td>
+</tr>
+<tr>
+<td>Training records</td>
+<td>1,168</td>
+</tr>
+<tr>
+<td>Testing records</td>
+<td>292</td>
+</tr>
+<tr>
+<td>Cross-validation</td>
+<td>5 folds</td>
+</tr>
+</tbody>
+</table>
+<p>I used a preprocessing pipeline to handle missing values and categorical features. The model was trained using the log of SalePrice, and I converted predictions back to dollars.</p>
+<h3 id="appendix-c-saved-model-and-results">Appendix C. Saved Model and Results</h3>
+<p>I saved the final model and preprocessing pipeline together in:</p>
+<p><code>artifacts/house_price_model.joblib</code></p>
+<p>The final test predictions are saved in:</p>
+<p><code>results/test_predictions.csv</code></p>
+<p>The model comparison results are saved in:</p>
+<p><code>results/model_comparison.csv</code></p>
+<h3 id="appendix-d-reproducibility-test">Appendix D. Reproducibility Test</h3>
+<p>To check my project, I cloned the GitHub repository into a separate folder and created a new Python environment.</p>
+<p>I installed the required packages using <code>requirements.txt</code>, loaded the saved model, and ran the evaluation script again.</p>
+<p>I got the same results as my original project:</p>
+<ul>
+<li>RMSE: $29,971.00</li>
+<li>MAE: $18,112.09</li>
+<li>R²: 0.8829</li>
+</ul>
+<p>I recorded the steps and results in <code>docs/reproducibility_test.md</code>.</p>
+<p>This was my own reproducibility check. An independent peer verification is still needed for the course requirements.</p>
+<h3 id="appendix-e-data-to-action-pipeline">Appendix E. Data-to-Action Pipeline</h3>
+<p>I created a pipeline diagram to show how the project connects the Kaggle data, preprocessing, model training, predictions, and possible pricing decisions.</p>
+<p>The diagram is saved in:</p>
+<p><code>docs/data_to_action_pipeline.pdf</code></p>
+<p>The written explanation is saved in:</p>
+<p><code>docs/data_to_action_pipeline.md</code></p>
+<p>The pricing decision and feedback stages are planned uses of the model, not parts that have already been tested with real estate agents.</p>
+</body>
+</html>

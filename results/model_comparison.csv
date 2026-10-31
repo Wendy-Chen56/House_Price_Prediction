@@ -1,0 +1,6 @@
+Model,Features,Mean_RMSE,Std_RMSE,Mean_MAE,Mean_R2
+Random Forest,7 Numerical + 5 Categorical,33381.19,4759.61,20196.8,0.8103
+Random Forest,7 Numerical,33783.1,4738.9,20911.8,0.8055
+Ridge Regression,7 Numerical,53429.25,37244.03,22211.07,0.3439
+Linear Regression,7 Numerical,54031.99,38495.27,22258.18,0.3201
+Huber Regression,7 Numerical,59908.65,50473.78,21863.14,0.0605
