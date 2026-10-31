@@ -18,3 +18,5 @@ Thumbs.db
 
 # Kaggle competition data
 data/*.csv
+`n~$*.docx
+~$*.docx
