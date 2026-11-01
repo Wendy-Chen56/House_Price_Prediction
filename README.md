@@ -6,17 +6,43 @@ This project explores how well machine learning can predict house prices using p
 
 The House Prices dataset from Kaggle was used to compare several regression models. The project also examines which house features are related to sale prices and why some houses are harder to predict.
 
-A FastAPI application was added to allow users to enter house information and receive a predicted sale price using the saved Random Forest model.
+A FastAPI application was added so users can enter house information and receive a predicted sale price using the saved Random Forest model.
 
 ## Dataset
 
 The dataset comes from Ames, Iowa, and includes information such as house size, quality, age, neighborhood, and sale price.
 
-The training data contains 1,460 houses and 81 columns.
+The training data contains 1,460 houses and 81 columns, including the house ID, 79 explanatory variables, and SalePrice.
 
 Dataset: https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview
 
-The original Kaggle files are stored in the `data/` folder.
+The original Kaggle CSV files are not included in this public GitHub repository. Users who want to reproduce the analysis or retrain the model must download the dataset separately.
+
+### How to Download the Dataset
+
+1. Open the Kaggle dataset link above.
+2. Sign in to Kaggle or create a free account.
+3. Join the competition and accept its rules if required.
+4. Open the Data tab and download the competition files.
+5. Extract the downloaded ZIP file.
+6. Copy `train.csv` and `test.csv` into the `data/` folder of this project.
+
+The folder should look like this:
+
+```text
+House_Price_Prediction/
+    data/
+        train.csv
+        test.csv
+        data_description.txt
+        README.md
+```
+
+Do not rename the CSV files.
+
+Additional information is available in `data/README.md`.
+
+The saved Random Forest model is included in the `artifacts/` folder. Users who only want to test the FastAPI application do not need to retrain the model or download the original dataset.
 
 ## Models Tested
 
@@ -47,11 +73,14 @@ The model was trained using 1,168 houses and evaluated on a test set of 292 hous
 
 The results were encouraging, but some unusual houses had large prediction errors.
 
+These results are from the original project evaluation. Results may vary if the data, training split, or model settings are changed.
+
 ## Project Files
 
-- `data/` - Kaggle dataset and data description
+- `P1/` - First project submission and supporting materials
+- `data/` - Dataset instructions and data description
 - `src/` - Python scripts for data analysis, model training, and evaluation
-- `docs/` - Project documentation, pipeline description, and API testing results
+- `docs/` - Project documentation, data pipeline description, and API testing results
 - `results/` - Model comparison and prediction results
 - `artifacts/` - Saved Random Forest model
 - `figures/` - Python charts used in the final report
@@ -62,17 +91,71 @@ The results were encouraging, but some unusual houses had large prediction error
 
 ## How to Run the Project
 
-The project was developed using Python 3.13.9 and VS Code on Windows.
+The project was developed using Python 3.13.9 and Visual Studio Code (VS Code) on Windows.
 
-First, clone the repository and open the project folder.
+The instructions below explain how to download, set up, and run the project.
+
+### Step 1: Install the Required Software
+
+Before starting, install:
+
+- Python: https://www.python.org/downloads/
+- VS Code: https://code.visualstudio.com/
+- Git: https://git-scm.com/downloads
+
+Python 3.13.9 was used during development. Using the same version is recommended.
+
+During Python installation, select the option to add Python to PATH if it is available.
+
+To confirm that Python is installed, open PowerShell or the VS Code terminal and run:
 
 ```powershell
-git clone https://github.com/Wendy-Chen56/house_prices_final_project.git
-cd house_prices_final_project
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+python --version
 ```
+
+The terminal should display the installed Python version.
+
+### Step 2: Download the Project from GitHub
+
+Open VS Code and select Terminal > New Terminal.
+
+Run:
+
+```powershell
+git clone https://github.com/Wendy-Chen56/House_Price_Prediction.git
+```
+
+Move into the project folder:
+
+```powershell
+cd House_Price_Prediction
+```
+
+If Git is not installed, the project can also be downloaded manually:
+
+1. Open https://github.com/Wendy-Chen56/House_Price_Prediction
+2. Click Code.
+3. Select Download ZIP.
+4. Extract the ZIP file.
+5. Open the extracted project folder in VS Code.
+
+Make sure the terminal is opened in the main project folder before running the Python scripts.
+
+### Step 3: Create a Virtual Environment
+
+From the main project folder, run:
+
+```powershell
+python -m venv venv
+```
+
+Activate the environment:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+When the environment is active, the terminal should normally show `(venv)` before the command prompt.
 
 If PowerShell blocks the activation script, run:
 
@@ -86,31 +169,83 @@ Then activate the environment again:
 .\venv\Scripts\Activate.ps1
 ```
 
-### Train and Save the Model
+### Step 4: Install the Required Packages
+
+Run:
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
+This installs the Python packages used in the project.
+
+Wait until the installation finishes without errors before continuing.
+
+### Step 5: Download the Kaggle Dataset
+
+If you want to reproduce the data analysis or train the model, download the original CSV files from Kaggle.
+
+Dataset: https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview
+
+Place `train.csv` and `test.csv` inside the `data/` folder.
+
+The original CSV files are not included in this public repository.
+
+If you only want to test the saved model through FastAPI, you can skip the training steps and go directly to the FastAPI section.
+
+### Step 6: Train and Save the Model
+
+From the main project folder, run:
 
 ```powershell
 python src/24_save_model.py
 ```
 
-### Load the Saved Model and Make Predictions
+This script trains and saves the Random Forest model.
+
+The saved model is stored in the `artifacts/` folder.
+
+### Step 7: Load the Saved Model and Make Predictions
+
+Run:
 
 ```powershell
 python src/25_load_test_model.py
 ```
 
-### Evaluate the Final Model
+This script loads the saved Random Forest model and tests its prediction functionality.
+
+The model predicts the log-transformed sale price, so `np.expm1()` is used to convert predictions back into dollars.
+
+### Step 8: Evaluate the Final Model
+
+Run:
 
 ```powershell
 python src/26_final_model_evaluation.py
 ```
 
-### Create the Model Comparison Table
+This script evaluates the final Random Forest model.
+
+The original project reported the following test results:
+
+| Metric | Result |
+|---|---|
+| RMSE | $29,971.00 |
+| MAE | $18,112.09 |
+| R² | 0.8829 |
+
+### Step 9: Create the Model Comparison Summary
+
+Run:
 
 ```powershell
 python src/27_model_comparison_summary.py
 ```
 
-The saved model uses 12 original house features. It predicts the log-transformed sale price, so `np.expm1()` is used to convert predictions back into dollars.
+This script summarizes the results from the regression models tested in the project.
+
+The models include Linear Regression, Ridge Regression, Huber Regression, and Random Forest.
 
 ## Final Report and Figures
 
@@ -124,7 +259,18 @@ The report files are available in the `report/` folder:
 
 Eight figures were created using Python, Matplotlib, and Seaborn. They are stored in the `figures/` folder.
 
-The figures include house price distributions, relationships between property features and sale prices, model comparisons, prediction errors, and feature importance.
+The figures include:
+
+- Distribution of residential sale prices
+- Relationship between living area and sale price
+- Average sale price by housing quality
+- Feature correlation heatmap
+- Model comparison results
+- Prediction error distribution
+- Actual versus predicted sale prices
+- Random Forest feature importance
+
+The existing report and figures can be reviewed without rerunning the analysis.
 
 ## FastAPI House Price Prediction
 
@@ -132,24 +278,46 @@ The project includes a FastAPI application that uses the saved Random Forest mod
 
 The API accepts 12 house features and returns an estimated sale price in US dollars.
 
-### Run the API
+### Step 1: Start the API
 
-From the project folder, run:
+Make sure the virtual environment is active and the required packages are installed.
+
+From the main project folder, run:
 
 ```powershell
 python -m uvicorn api.main:app --reload
 ```
 
-Open the API documentation in a browser:
+The terminal should show that the application server is running.
+
+Keep the terminal open while using the API.
+
+### Step 2: Open the API Documentation
+
+Open a browser and visit:
 
 http://127.0.0.1:8000/docs
 
-### API Endpoints
+This opens the FastAPI interactive documentation page.
 
-| Endpoint | Method | Description |
-|---|---|---|
-| `/health` | GET | Checks whether the API and saved model are available |
-| `/predict` | POST | Predicts a house price using 12 input features |
+### Step 3: Check the API Health
+
+1. Find the `GET /health` endpoint.
+2. Click to expand it.
+3. Click Try it out.
+4. Click Execute.
+5. Check the response.
+
+A successful health check should return HTTP status 200.
+
+### Step 4: Make a House Price Prediction
+
+1. Find the `POST /predict` endpoint.
+2. Click to expand it.
+3. Click Try it out.
+4. Replace the request body with the example below.
+5. Click Execute.
+6. Review the predicted sale price in the response body.
 
 ### Example Request
 
@@ -180,7 +348,22 @@ http://127.0.0.1:8000/docs
 }
 ```
 
-The example uses sample house information. The predicted price is not compared with an actual sale price.
+This example uses sample house information. The predicted price is not compared with an actual sale price.
+
+The exact prediction may change if the model is retrained.
+
+### API Endpoints
+
+| Endpoint | Method | Description |
+|---|---|---|
+| `/health` | GET | Checks whether the API and saved model are available |
+| `/predict` | POST | Predicts a house price using 12 input features |
+
+### Step 5: Stop the API
+
+Return to the terminal where the API server is running.
+
+Press Ctrl + C to stop the server.
 
 ## API Testing
 
@@ -192,11 +375,13 @@ An invalid input test was also performed by setting `OverallQual` to 15. The API
 
 ### Run Automated Tests
 
+From the main project folder, run:
+
 ```powershell
 python -m pytest tests/test_api.py -v
 ```
 
-### Test Results
+### Original Test Results
 
 | Test | Result |
 |---|---|
@@ -204,9 +389,79 @@ python -m pytest tests/test_api.py -v
 | House Price Prediction | PASSED |
 | Invalid Input Validation | PASSED |
 
-All three automated tests passed.
+All three automated tests passed during the original project testing.
 
 Additional details are available in `docs/fastapi_validation.md`.
+
+## Troubleshooting
+
+### Python Is Not Recognized
+
+Make sure Python is installed and added to PATH.
+
+Check the installed version:
+
+```powershell
+python --version
+```
+
+On some Windows computers, `py` can be used instead of `python`.
+
+### PowerShell Blocks Virtual Environment Activation
+
+Run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+Then activate the environment again:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+### ModuleNotFoundError
+
+Make sure the virtual environment is active.
+
+Install the required packages again:
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
+### FileNotFoundError for train.csv
+
+Make sure `train.csv` is located inside the `data/` folder.
+
+Download the Kaggle dataset separately if needed.
+
+Also check that the terminal is opened in the main project folder.
+
+### Saved Model Cannot Be Found
+
+Check the `artifacts/` folder for the saved Random Forest model.
+
+If the model file is missing, download the Kaggle dataset and run:
+
+```powershell
+python src/24_save_model.py
+```
+
+### FastAPI Documentation Page Does Not Open
+
+Make sure the API server is running:
+
+```powershell
+python -m uvicorn api.main:app --reload
+```
+
+Then open:
+
+http://127.0.0.1:8000/docs
+
+If the terminal shows an error, resolve that error before trying the browser again.
 
 ## Limitations
 
