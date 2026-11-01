@@ -16,7 +16,11 @@ The training data contains 1,460 houses and 81 columns, including the house ID, 
 
 Dataset: https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview
 
-The original Kaggle CSV files are not included in this public GitHub repository. Users who want to reproduce the analysis or retrain the model must download the dataset separately.
+The original Kaggle CSV files are not included in this public GitHub repository.
+
+For complete download instructions, see [data/README.md](data/README.md).
+
+The saved Random Forest model is included in the `artifacts/` folder. Users who only want to test the FastAPI application do not need to retrain the model or download the original dataset.
 
 ### How to Download the Dataset
 
@@ -88,6 +92,35 @@ These results are from the original project evaluation. Results may vary if the 
 - `api/` - FastAPI house price prediction application
 - `tests/` - Automated API tests
 - `requirements.txt` - Python packages used in this project
+
+## Project Stages
+
+This repository contains the House Price Prediction project and its supporting materials.
+
+The project is organized into three submission stages:
+
+### P1 – Project Proposal and Initial Analysis
+
+P1 focuses on the business problem, dataset, initial data exploration, and baseline regression model.
+
+See [P1/README.md](P1/README.md) for instructions on reviewing and reproducing the P1 results.
+
+The final Random Forest model and FastAPI application are not required for P1 verification.
+
+### P2 – Model Development and Evaluation
+
+P2 focuses on data preparation, model comparison, evaluation, saved model testing, and reproducibility.
+
+The P2 folder will contain the draft report, presentation, and stage-specific verification instructions.
+
+### Final – Complete Project Delivery
+
+The final stage includes the completed report, presentation, model, and supporting analysis.
+
+The FastAPI application demonstrates how the saved model can be used to estimate house prices.
+
+The full setup and execution instructions are provided below.
+
 
 ## How to Run the Project
 
@@ -181,17 +214,14 @@ This installs the Python packages used in the project.
 
 Wait until the installation finishes without errors before continuing.
 
-### Step 5: Download the Kaggle Dataset
+### Step 5: Set Up the Kaggle Dataset
 
-If you want to reproduce the data analysis or train the model, download the original CSV files from Kaggle.
+To reproduce the data analysis or retrain the model, follow the download and setup instructions in [data/README.md](data/README.md).
 
-Dataset: https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview
+Make sure `data/train.csv` and `data/test.csv` are in the correct folder before running the analysis scripts.
 
-Place `train.csv` and `test.csv` inside the `data/` folder.
+If you only want to test the saved model through FastAPI, you can skip this step and go directly to the FastAPI section.
 
-The original CSV files are not included in this public repository.
-
-If you only want to test the saved model through FastAPI, you can skip the training steps and go directly to the FastAPI section.
 
 ### Step 6: Train and Save the Model
 

@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 app = FastAPI(
     title="House Price Prediction API",
-    description="MSBA 265 Final Project",
+    description="Enter house information to estimate a sale price using a trained machine learning model.",
     version="1.0.0"
 )
 
@@ -35,7 +35,7 @@ class HouseInput(BaseModel):
     ExterQual: str
 
 
-@app.get("/health")
+@app.get("/health", summary="Check API and Model Status")
 def health_check():
     return {
         "status": "ok",
@@ -44,7 +44,7 @@ def health_check():
     }
 
 
-@app.post("/predict")
+@app.post("/predict", summary="Predict House Sale Price")
 def predict_price(house: HouseInput):
     # Convert input into the same DataFrame format used for training
     input_df = pd.DataFrame([house.model_dump()])
