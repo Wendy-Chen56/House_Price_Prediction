@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data-to-Action Pipeline</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 0 25px;
+    line-height: 1.6;
+    color: #222;
+}
+h1, h2, h3 { color: #12324a; }
+h1 { border-bottom: 2px solid #00a6a6; padding-bottom: 12px; }
+@media print {
+    body { margin: 15mm auto; }
+}
+</style>
+</head>
+<body>
+<h1>Data-to-Action Pipeline</h1>
+<h2>Project: House Price Prediction</h2>
+<h3>1. Data Collection — Completed</h3>
+<p>I downloaded the House Prices dataset from Kaggle. It includes house information such as size, quality, age, neighborhood, and sale price.</p>
+<p><strong>Tool:</strong> Kaggle</p>
+<h3>2. Data Preparation — Completed</h3>
+<p>I checked the data for missing values and selected seven numerical features and five categorical features. I used One-Hot Encoding to prepare the categorical information for the model.</p>
+<p><strong>Tool:</strong> Python, pandas, scikit-learn</p>
+<h3>3. Model Training — Completed</h3>
+<p>I tested Linear Regression, Ridge Regression, Huber Regression, and Random Forest. Random Forest with 12 features performed the best in my cross-validation comparison.</p>
+<p><strong>Tool:</strong> Python, scikit-learn</p>
+<h3>4. Model Evaluation — Completed</h3>
+<p>I compared the models using RMSE, MAE, and R². My final Random Forest model achieved an RMSE of $29,971, MAE of $18,112.09, and R² of 0.8829 on 292 test houses. I also checked unusual houses that caused large prediction errors.</p>
+<p><strong>Tool:</strong> Python, scikit-learn</p>
+<h3>5. Save and Reload Model — Completed</h3>
+<p>I saved my Random Forest model as a joblib file and tested it in a separate Python environment. I was able to reproduce the same predictions and evaluation results.</p>
+<p><strong>Tool:</strong> Python, joblib</p>
+<h3>6. Price Prediction — Completed as a Prototype</h3>
+<p>The saved model can take 12 house features and predict a sale price. I also developed a FastAPI application that allows users to submit house information through an API. All three automated API tests passed.</p>
+<p><strong>Tool:</strong> Python, Random Forest, FastAPI, pytest</p>
+<h3>7. Pricing Decision — Planned</h3>
+<p>A home seller or real estate agent could compare the predicted price with other market information before deciding on a listing price.</p>
+<p>For example, if a seller asks $300,000 and the model predicts $260,000, the $40,000 difference could help start a pricing discussion. This is an example, not a proven financial saving.</p>
+<p><strong>User:</strong> Home sellers and real estate agents</p>
+<h3>8. Feedback and Model Improvement — Planned</h3>
+<p>In the future, I would like to compare predictions with actual sale prices, check large errors, and update the model using newer local housing data. I would also like to build a more user-friendly web interface.</p>
+<p><strong>Goal:</strong> Improve prediction accuracy and make the model easier to use.</p>
+</body>
+</html>
