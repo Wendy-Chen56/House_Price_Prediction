@@ -448,7 +448,7 @@ I would also try adding more useful features, such as recent sales of similar ho
 
 Another improvement would be to look more closely at houses with large prediction errors. I want to understand what makes those houses different and whether I can improve the predictions without simply removing difficult records.
 
-I would also like to build a simple tool where someone could enter house information and receive a predicted price. This could make the project easier for someone without programming experience to use.
+I have already developed a FastAPI application that allows users to enter house information and receive a predicted sale price. In the future, I would like to improve it by creating a more user-friendly web interface so that real estate agents and home sellers could use the model without working directly with API documentation.
 
 Lastly, I would want to test the model with real estate agents and compare their pricing decisions with and without the model. That would help me understand whether the project has real business value.
 
